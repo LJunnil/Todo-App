@@ -1,16 +1,32 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import About from './pages/About';
+import React, { useState } from 'react';
+import TodoList from './components/TodoList';
+import AddTodo from './components/AddTodo';
 
 function App() {
+  const [todos, setTodos] = useState([]);
+
+  const addTodo = (task) => {
+    setTodos([...todos, { id: Date.now(), task, completed: false }]);
+  };
+
+  const toggleComplete = (id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </Router>
+    <div>
+      <h1>Todo App</h1>
+      <AddTodo addTodo={addTodo} />
+      <TodoList todos={todos} toggleComplete={toggleComplete} deleteTodo={deleteTodo} />
+    </div>
   );
 }
 
